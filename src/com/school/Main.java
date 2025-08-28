@@ -1,21 +1,18 @@
 package com.school;
 
-public class Main {
+public class Main { 
     public static void main(String[] args) {
-    Student[] students = new Student[2];
-    students[0]= new Student();
-    students[0].setDetails(1,"madhu");
-    students[1] = new Student();
-    students[1].setDetails(2,"hari");
+        Student[] students = new Student[3];
+        students[0] = new Student("madhu");
+        students[1] = new Student("hari");
+        students[2] = new Student("john");
 
-    Course[] courses = new Course[2];
+        Course[] courses = new Course[3];
+        courses[0] = new Course("java");
+        courses[1] = new Course("python");
+        courses[2] = new Course("c++");
 
-    courses[0] = new Course();
-    courses[0].setDetails("1", "java");
-    courses[1] = new Course();
-    courses[1].setDetails("2", "python");
-
-    System.out.println("Students:");
+        System.out.println("Students:");
         for (Student s : students) {
             s.displayDetails();
         }
@@ -24,6 +21,6 @@ public class Main {
         for (Course c : courses) {
             c.displayDetails();
         }
-}
+    }
 }
 
