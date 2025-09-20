@@ -7,38 +7,39 @@ public class Main {
     public static void main(String[] args) {
 
         // --- Create Students ---
-        Student student1 = new Student("Madhu", "10th");
-        Student student2 = new Student("Hari", "9th");
-        Student student3 = new Student("John", "11th");
+        ArrayList<Student> students = new ArrayList<>();
+        students.add(new Student("Madhu", "10th"));
+        students.add(new Student("Hari", "9th"));
+        students.add(new Student("John", "11th"));
 
-        // --- Create Teachers ---
-        Teacher teacher1 = new Teacher("Alice", "Mathematics");
-        Teacher teacher2 = new Teacher("Bob", "Physics");
+        // --- Create Courses ---
+        ArrayList<Course> courses = new ArrayList<>();
+        courses.add(new Course("Mathematics"));
+        courses.add(new Course("Physics"));
+        courses.add(new Course("Chemistry"));
 
-        // --- Create Staff ---
-        Staff staff1 = new Staff("Catherine", "Administrator");
+        // --- Create Attendance Records ---
+        ArrayList<AttendanceRecord> attendanceLog = new ArrayList<>();
+        attendanceLog.add(new AttendanceRecord(students.get(0).getId(), courses.get(0).getCourseId(), "Present"));
+        attendanceLog.add(new AttendanceRecord(students.get(1).getId(), courses.get(1).getCourseId(), "Absent"));
+        attendanceLog.add(new AttendanceRecord(students.get(2).getId(), courses.get(2).getCourseId(), "Present"));
+
+        // --- Save Data to Files ---
+        FileStorageService fileStorageService = new FileStorageService();
+        fileStorageService.saveData(students, "students.txt");
+        fileStorageService.saveData(courses, "courses.txt");
+        fileStorageService.saveData(attendanceLog, "attendance_log.txt");
 
         // --- Display all details ---
         System.out.println("Students:");
-        student1.displayDetails();
-        student2.displayDetails();
-        student3.displayDetails();
+        for (Student student : students) {
+            student.displayDetails();
+        }
 
-        System.out.println("\nTeachers:");
-        teacher1.displayDetails();
-        teacher2.displayDetails();
-
-        System.out.println("\nStaff:");
-        staff1.displayDetails();
-
-        // --- Attendance log ---
-        List<AttendanceRecord> attendanceLog = new ArrayList<>();
-
-        // Add attendance records for students
-        attendanceLog.add(new AttendanceRecord(student1.getId(), 101, "Present"));
-        attendanceLog.add(new AttendanceRecord(student2.getId(), 102, "Absent"));
-        attendanceLog.add(new AttendanceRecord(student3.getId(), 103, "Present"));
-        attendanceLog.add(new AttendanceRecord(student1.getId(), 102, "Present"));
+        System.out.println("\nCourses:");
+        for (Course course : courses) {
+            course.displayDetails();
+        }
 
         System.out.println("\n--- Attendance Log ---");
         for (AttendanceRecord record : attendanceLog) {
