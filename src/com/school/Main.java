@@ -42,29 +42,31 @@ public class Main {
         courses.add(new Course("Physics"));
         courses.add(new Course("Chemistry"));
 
-        // --- Create Attendance Records ---
-        ArrayList<AttendanceRecord> attendanceLog = new ArrayList<>();
-        attendanceLog.add(new AttendanceRecord(students.get(0), courses.get(0), "Present"));
-        attendanceLog.add(new AttendanceRecord(students.get(1), courses.get(1), "Absent"));
-        attendanceLog.add(new AttendanceRecord(students.get(2), courses.get(2), "Present"));
+        // --- Create AttendanceService ---
+        FileStorageService fileStorageService = new FileStorageService();
+        AttendanceService attendanceService = new AttendanceService(fileStorageService);
+
+        // --- Mark Attendance using different methods ---
+        attendanceService.markAttendance(students.get(0), courses.get(0), "Present");
+        attendanceService.markAttendance(1, 102, "Absent", students, courses);
+        attendanceService.markAttendance(students.get(2), courses.get(2), "Present");
 
         // --- Display School Directory (Polymorphism) ---
         displaySchoolDirectory(schoolPeople);
 
+        // --- Display Attendance Logs (Overloaded Methods) ---
+        attendanceService.displayAttendanceLog();
+        attendanceService.displayAttendanceLog(students.get(0));
+        attendanceService.displayAttendanceLog(courses.get(1));
+
         // --- Save Data to Files ---
-        FileStorageService fileStorageService = new FileStorageService();
         fileStorageService.saveData(students, "students.txt");
         fileStorageService.saveData(courses, "courses.txt");
-        fileStorageService.saveData(attendanceLog, "attendance_log.txt");
+        attendanceService.saveAttendanceData();
 
         System.out.println("\nCourses:");
         for (Course course : courses) {
             course.displayDetails();
-        }
-
-        System.out.println("\n--- Attendance Log ---");
-        for (AttendanceRecord record : attendanceLog) {
-            record.displayRecord();
         }
     }
 }
