@@ -1,70 +1,59 @@
 package com.school;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    public static void displaySchoolDirectory(List<Person> people) {
+    public static void displaySchoolDirectory(RegistrationService regService) {
         System.out.println("\n=== School Directory ===");
-        for (Person person : people) {
+        for (Person person : regService.getAllPeople()) {
             person.displayDetails();
             System.out.println();
         }
     }
 
     public static void main(String[] args) {
+        // --- Initialize Services ---
+        FileStorageService fileStorageService = new FileStorageService();
+        RegistrationService registrationService = new RegistrationService(fileStorageService);
+        AttendanceService attendanceService = new AttendanceService(registrationService, fileStorageService);
 
-        // --- Create Students ---
-        ArrayList<Student> students = new ArrayList<>();
-        students.add(new Student("Madhu", "10th"));
-        students.add(new Student("Hari", "9th"));
-        students.add(new Student("John", "11th"));
+        // --- Register Students ---
+        registrationService.registerStudent("Madhu", "10th");
+        registrationService.registerStudent("Hari", "9th");
+        registrationService.registerStudent("John", "11th");
 
-        // --- Create Teachers ---
-        Teacher teacher1 = new Teacher("Dr. Smith", "Mathematics");
-        Teacher teacher2 = new Teacher("Ms. Johnson", "Physics");
+        // --- Register Teachers ---
+        registrationService.registerTeacher("Dr. Smith", "Mathematics");
+        registrationService.registerTeacher("Ms. Johnson", "Physics");
 
-        // --- Create Staff ---
-        Staff staff1 = new Staff("Mr. Brown", "Administrator");
-        Staff staff2 = new Staff("Ms. Davis", "Librarian");
-
-        // --- Create School People List ---
-        ArrayList<Person> schoolPeople = new ArrayList<>();
-        schoolPeople.addAll(students);
-        schoolPeople.add(teacher1);
-        schoolPeople.add(teacher2);
-        schoolPeople.add(staff1);
-        schoolPeople.add(staff2);
+        // --- Register Staff ---
+        registrationService.registerStaff("Mr. Brown", "Administrator");
+        registrationService.registerStaff("Ms. Davis", "Librarian");
 
         // --- Create Courses ---
-        ArrayList<Course> courses = new ArrayList<>();
-        courses.add(new Course("Mathematics"));
-        courses.add(new Course("Physics"));
-        courses.add(new Course("Chemistry"));
+        registrationService.createCourse("Mathematics");
+        registrationService.createCourse("Physics");
+        registrationService.createCourse("Chemistry");
 
-        // --- Create Attendance Records ---
-        ArrayList<AttendanceRecord> attendanceLog = new ArrayList<>();
-        attendanceLog.add(new AttendanceRecord(students.get(0), courses.get(0), "Present"));
-        attendanceLog.add(new AttendanceRecord(students.get(1), courses.get(1), "Absent"));
-        attendanceLog.add(new AttendanceRecord(students.get(2), courses.get(2), "Present"));
+        // --- Mark Attendance ---
+        attendanceService.markAttendance(0, 0, "Present");
+        attendanceService.markAttendance(1, 1, "Absent");
+        attendanceService.markAttendance(2, 2, "Present");
 
         // --- Display School Directory (Polymorphism) ---
-        displaySchoolDirectory(schoolPeople);
+        displaySchoolDirectory(registrationService);
 
-        // --- Save Data to Files ---
-        FileStorageService fileStorageService = new FileStorageService();
-        fileStorageService.saveData(students, "students.txt");
-        fileStorageService.saveData(courses, "courses.txt");
-        fileStorageService.saveData(attendanceLog, "attendance_log.txt");
-
+        // --- Display Courses ---
         System.out.println("\nCourses:");
-        for (Course course : courses) {
+        for (Course course : registrationService.getCourses()) {
             course.displayDetails();
         }
 
-        System.out.println("\n--- Attendance Log ---");
-        for (AttendanceRecord record : attendanceLog) {
-            record.displayRecord();
-        }
+        // --- Display Attendance Log ---
+        attendanceService.displayAttendanceLog();
+
+        // --- Save All Data ---
+        registrationService.saveAllRegistrations();
+        attendanceService.saveAttendanceData();
     }
 }
