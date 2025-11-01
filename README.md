@@ -27,6 +27,8 @@ AttendanceSystem/
             ├── Staff.java
             ├── Course.java
             ├── AttendanceRecord.java
+            ├── AttendanceService.java
+            ├── RegistrationService.java
             ├── Storable.java
             └── FileStorageService.java
 ```
@@ -91,12 +93,36 @@ AttendanceSystem/
   - Demonstrated runtime method resolution with `displayDetails()`
   - Updated attendance record creation to use actual objects instead of IDs
 
+### Part 9: SOLID Service Layer - RegistrationService & AttendanceService Separation
+- **Applied Single Responsibility Principle (SRP):**
+  - Created `RegistrationService` to manage all registration operations
+  - Created `AttendanceService` to handle attendance-specific operations
+  - Separated concerns for better maintainability and testability
+- **Updated `Teacher.java` and `Staff.java`:**
+  - Implemented `Storable` interface
+  - Added `toDataString()` method for file serialization
+- **Created `RegistrationService.java`:**
+  - Manages lists of Student, Teacher, Staff, and Course objects
+  - Provides methods: `registerStudent()`, `registerTeacher()`, `registerStaff()`, `createCourse()`
+  - Includes lookup methods: `findStudentById()`, `findCourseById()`
+  - Handles saving all registrations to respective files
+- **Created `AttendanceService.java`:**
+  - Depends on `RegistrationService` for student/course lookups
+  - Manages attendance records with `markAttendance()` method
+  - Provides `displayAttendanceLog()` and `saveAttendanceData()` methods
+- **Refactored `Main.java`:**
+  - Uses dependency injection pattern with service classes
+  - Demonstrates clean separation of concerns
+  - Updated `displaySchoolDirectory()` to accept `RegistrationService`
+
 ---
 
 ## Output Files
 
 After running the program, the following files will be generated in the project root:
 - `students.txt`: Contains student details in the format `id,name,gradeLevel`
+- `teachers.txt`: Contains teacher details in the format `id,name,subjectTaught`
+- `staff.txt`: Contains staff details in the format `id,name,role`
 - `courses.txt`: Contains course details in the format `courseId,courseName`
 - `attendance_log.txt`: Contains attendance records in the format `studentId,courseId,status`
 
